@@ -2,7 +2,7 @@ name: client
 on:
   push:
     branches:
-      - reference
+      - main
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -11,10 +11,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Install dependencies
         run: npm install
-        working-directory: ./my-agora-states-client
+        working-directory: ./my-agora-states-client-react
       - name: Build
         run: npm run build
-        working-directory: ./my-agora-states-client
+        working-directory: ./my-agora-states-client-react
       - name: SHOW AWS CLI VERSION
         run: |
           aws --version
@@ -24,8 +24,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
         run: |
-          aws s3 cp \
+          aws s3 sync \
             --region ap-northeast-2 \
             build s3://github-actions-dh/reference  \
             --delete
-        working-directory: <?>
+        working-directory: ./my-agora-states-client-react
